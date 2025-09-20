@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Nani!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+        }
+        
+        body {
+            overflow: hidden;
+            height: 100vh;
+            background: linear-gradient(to bottom, #1a237e, #0d47a1);
+        }
+        
+        /* Balloon page styles */
+        #balloon-page {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 60px;
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+        
+        .balloon:before {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(20deg); }
+        }
+        
+        .start-button {
+            padding: 15px 40px;
+            font-size: 24px;
+            background: linear-gradient(45deg, #FF5252, #FF4081);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .start-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Fireworks page styles */
+        #fireworks-page {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .firework {
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        /* Jumbled letters page */
+        #jumble-page {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .letter {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .letter:hover {
+            transform: scale(1.1);
+            background: #FFD700;
+        }
+        
+        .selected {
+            background: #FFD700;
+            transform: scale(1.1);
+        }
+        
+        .message {
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Surprise page styles */
+        #surprise-page {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .birthday-message {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff4081;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        .sister-message {
+            font-size: 24px;
+            color: #1a237e;
+            text-align: center;
+            max-width: 80%;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .photo-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin-bottom: 30px;
+        }
+        
+        .curtain {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, #8B0000, #B22222);
+            transition: height 1.5s ease-in-out;
+            z-index: 10;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .curtain::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+        }
+        
+        .curtain-left {
+            left: 0;
+            border-radius: 10px 0 0 10px;
+        }
+        
+        .curtain-right {
+            right: 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .curtain-rope {
+            position: absolute;
+            top: -15px;
+            width: 10px;
+            height: 30px;
+            background: #DAA520;
+            border-radius: 5px;
+            z-index: 11;
+        }
+        
+        .curtain-rope-left {
+            left: 40px;
+        }
+        
+        .curtain-rope-right {
+            right: 40px;
+        }
+        
+        .photo-frame {
+            width: 100%;
+            height: 100%;
+            border: 10px solid white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff4081;
+            opacity: 0.8;
+            animation: fall linear forwards;
+        }
+        
+        .music-control {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #FF5252, #FF4081);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        
+        .music-control:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Balloon Page -->
+    <div id="balloon-page">
+        <button class="start-button" onclick="startFireworks()">Click for Surprise!</button>
+    </div>
+    
+    <!-- Fireworks Page -->
+    <div id="fireworks-page"></div>
+    
+    <!-- Jumbled Letters Page -->
+    <div id="jumble-page">
+        <p class="message">Find and select "NANI" from the letters below!</p>
+        <div class="letter-grid">
+            <div class="letter" onclick="selectLetter(this)">N</div>
+            <div class="letter" onclick="selectLetter(this)">A</div>
+            <div class="letter" onclick="selectLetter(this)">B</div>
+            <div class="letter" onclick="selectLetter(this)">C</div>
+            <div class="letter" onclick="selectLetter(this)">D</div>
+            <div class="letter" onclick="selectLetter(this)">N</div>
+            <div class="letter" onclick="selectLetter(this)">I</div>
+            <div class="letter" onclick="selectLetter(this)">F</div>
+            <div class="letter" onclick="selectLetter(this)">G</div>
+            <div class="letter" onclick="selectLetter(this)">H</div>
+            <div class="letter" onclick="selectLetter(this)">A</div>
+            <div class="letter" onclick="selectLetter(this)">J</div>
+            <div class="letter" onclick="selectLetter(this)">K</div>
+            <div class="letter" onclick="selectLetter(this)">L</div>
+            <div class="letter" onclick="selectLetter(this)">M</div>
+            <div class="letter" onclick="selectLetter(this)">O</div>
+        </div>
+    </div>
+    
+    <!-- Surprise Page -->
+    <div id="surprise-page">
+        <h1 class="birthday-message">Happy Birthday Nani!</h1>
+        <p class="sister-message">To my dearest little brother, you are the most special person in my world. Watching you grow has been my greatest joy. May your birthday be as amazing as you are! Love always, your sister.</p>
+        
+        <div class="photo-container">
+            <div class="curtain-rope curtain-rope-left"></div>
+            <div class="curtain-rope curtain-rope-right"></div>
+            <div class="curtain curtain-left"></div>
+            <div class="curtain curtain-right"></div>
+            <div class="photo-frame">
+                <img src="https://i.postimg.cc/g23fWZ2Q/IMG-20250920-195133.jpg" alt="Nani" style="width:100%;height:100%;object-fit:cover;">
+
+            </div>
+        </div>
+        
+        <button class="music-control" onclick="toggleMusic()">Pause Music</button>
+    </div>
+    
+    <audio id="birthdayAudio" controls autoplay>
+        <source src="https://www.dropbox.com/scl/fi/ez41oa47nq8xc4ls4qj3x/happy-birthday-357371.mp3?rlkey=e2xzgtes9y3kfcrqpdr09rtz5&st=9wjymi7d&raw=1" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        // Create balloons
+        function createBalloons() {
+            const colors = ['#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE'];
+            const balloonPage = document.getElementById('balloon-page');
+            
+            for (let i = 0; i < 50; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                
+                // Random properties
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 20 + 40;
+                const left = Math.random() * 100;
+                const animationDelay = Math.random() * 15;
+                
+                // Apply styles
+                balloon.style.width = `${size}px`;
+                balloon.style.height = `${size * 1.2}px`;
+                balloon.style.background = color;
+                balloon.style.left = `${left}%`;
+                balloon.style.animationDelay = `${animationDelay}s`;
+                
+                balloonPage.appendChild(balloon);
+            }
+        }
+        
+        // Start fireworks
+        function startFireworks() {
+            document.getElementById('balloon-page').style.display = 'none';
+            document.getElementById('fireworks-page').style.display = 'flex';
+            
+            // Create fireworks
+            createFireworks();
+            
+            // After fireworks, show jumbled letters
+            setTimeout(() => {
+                document.getElementById('fireworks-page').style.display = 'none';
+                document.getElementById('jumble-page').style.display = 'flex';
+            }, 5000);
+        }
+        
+        // Create fireworks effect
+        function createFireworks() {
+            const fireworksPage = document.getElementById('fireworks-page');
+            const colors = ['#FF5252', '#FF4081', '#FFD700', '#00E5FF', '#7C4DFF', '#18FFFF', '#64FFDA'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    
+                    // Random properties
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const size = Math.random() * 8 + 2;
+                    const left = Math.random() * 100;
+                    const top = Math.random() * 100;
+                    
+                    // Apply styles
+                    firework.style.width = `${size}px`;
+                    firework.style.height = `${size}px`;
+                    firework.style.background = color;
+                    firework.style.left = `${left}%`;
+                    firework.style.top = `${top}%`;
+                    firework.style.boxShadow = `0 0 ${size*2}px ${size/2}px ${color}`;
+                    
+                    fireworksPage.appendChild(firework);
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        firework.remove();
+                    }, 2000);
+                }, i * 100);
+            }
+        }
+        
+        // Letter selection logic
+        let selectedLetters = [];
+        
+        function selectLetter(element) {
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedLetters = selectedLetters.filter(letter => letter !== element);
+            } else {
+                element.classList.add('selected');
+                selectedLetters.push(element);
+                
+                // Check if "NANI" is selected
+                if (selectedLetters.length === 4) {
+                    const word = selectedLetters.map(el => el.textContent).join('');
+                    if (word === 'NANI') {
+                        // Correct selection
+                        setTimeout(showSurprisePage, 1000);
+                    } else {
+                        // Wrong selection
+                        setTimeout(() => {
+                            selectedLetters.forEach(el => el.classList.remove('selected'));
+                            selectedLetters = [];
+                        }, 1000);
+                    }
+                }
+            }
+        }
+        
+        // Show surprise page
+        function showSurprisePage() {
+            document.getElementById('jumble-page').style.display = 'none';
+            document.getElementById('surprise-page').style.display = 'flex';
+            
+            // Play birthday music
+            const audio = document.getElementById('birthdayAudio');
+            audio.play();
+            
+            // Create confetti
+            createConfetti();
+            
+            // Open the curtains after a short delay
+            setTimeout(openCurtains, 1000);
+        }
+        
+        // Open curtains effect
+        function openCurtains() {
+            const leftCurtain = document.querySelector('.curtain-left');
+            const rightCurtain = document.querySelector('.curtain-right');
+            
+            leftCurtain.style.height = '0%';
+            rightCurtain.style.height = '0%';
+        }
+        
+        // Toggle music
+        function toggleMusic() {
+            const audio = document.getElementById('birthdayAudio');
+            const button = document.querySelector('.music-control');
+            
+            if (audio.paused) {
+                audio.play();
+                button.textContent = 'Pause Music';
+            } else {
+                audio.pause();
+                button.textContent = 'Play Music';
+            }
+        }
+        
+        // Create confetti effect
+        function createConfetti() {
+            const surprisePage = document.getElementById('surprise-page');
+            const colors = ['#FF5252', '#FF4081', '#FFD700', '#00E5FF', '#7C4DFF', '#18FFFF', '#64FFDA'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Random properties
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 10 + 5;
+                const left = Math.random() * 100;
+                const animationDelay = Math.random() * 5;
+                const animationDuration = Math.random() * 5 + 5;
+                
+                // Apply styles
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.background = color;
+                confetti.style.left = `${left}%`;
+                confetti.style.animationDelay = `${animationDelay}s`;
+                confetti.style.animationDuration = `${animationDuration}s`;
+                
+                surprisePage.appendChild(confetti);
+            }
+        }
+        
+        // Initialize the page
+        window.onload = function() {
+            createBalloons();
+        };
+    </script>
+</body>
+</html>
